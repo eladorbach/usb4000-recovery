@@ -1,0 +1,10 @@
+*.bin
+*.iic
+*.xsvf
+*.hex
+*.csv
+*.sqlite*
+*.log
+backups/
+private-backups/
+__pycache__/

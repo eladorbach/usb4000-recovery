@@ -13,6 +13,7 @@ My instrument stopped enumerating over USB (Windows Code 43; Linux USB timeout -
 | [USB4000_I2C_READONLY.ino](USB4000_I2C_READONLY.ino) | ESP32 Arduino read-only I²C scan and EEPROM dump commands |
 | [usb4000_offline_diff.py](usb4000_offline_diff.py) | Compare two matching 32 KiB EEPROM backups with an official firmware reference; no device access |
 | [usb4000_capture_readonly.py](usb4000_capture_readonly.py) | Host script for capturing and verifying both EEPROMs twice, using the read-only Arduino sketch |
+| [firmware/USB4000Reader/USB4000Reader.ino](firmware/USB4000Reader/USB4000Reader.ino) | **Original working recovery firmware:** read, dump, and tightly guarded instrument-specific EEPROM `ARM`/`PATCH` commands. **Write-capable; not a general-purpose tool.** |
 
 ## Wiring
 
@@ -41,7 +42,7 @@ python3 -m pip install pyserial
 python3 usb4000_capture_readonly.py --port /dev/serial/by-id/YOUR-ESP32-PORT --output ./private-backups
 ```
 
-Capture **both 32,768-byte EEPROMs twice**, verify matching copies, and keep the backups private. The host tool expects the `BEGIN` / `DATA` / `END` protocol from the sketch in this repository; it is **not** compatible with the original write-capable recovery firmware's different serial protocol.
+Capture **both 32,768-byte EEPROMs twice**, verify matching copies, and keep the backups private. The host tool expects the `BEGIN` / `DATA` / `END` protocol from the **read-only** sketch. The original guarded, write-capable recovery sketch uses **different command syntax** (`DUMP 0X51`, `DUMP 0X53`); do not use this host capture script with it.
 
 For offline analysis with a *confirmed compatible* manufacturer FX2 image:
 
@@ -53,7 +54,7 @@ python3 usb4000_offline_diff.py private-backups/usb4000_0x51_read1.bin private-b
 
 The actual repair of my unit required an instrument-specific, guarded 60-block FX2 write sequence affecting **932 bytes** while preserving calibration. The USB device subsequently returned as **2457:1022**. The independent OEM Windows FPGA update restored useful spectral response, confirmed with frames at 5, 20 and 100 ms. The original FPGA bitstream was not dumped, so its initial failure mechanism remains uncertain.
 
-**This repository intentionally excludes the instrument-specific write-capable patcher**, serial-specific patch plan, EEPROM backups, calibration data and proprietary firmware binaries. The examples diagnose and back up a USB4000; they do **not** automatically unbrick one. Do not overwrite an EEPROM from this repository.
+**The original write-capable sketch is included for transparency and reproducibility, not as an automatic fix.** Its hardcoded target SHA and guarded patch range apply to *my* instrument only. Do **not** issue `ARM`/`PATCH` on a different USB4000. The serial-specific host patch plan, EEPROM backups, calibration data and proprietary firmware binaries remain private. The public read-only examples do not write EEPROMs.
 
 ## OEM resources
 
