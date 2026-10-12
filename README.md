@@ -61,4 +61,4 @@ The actual repair of my unit required an instrument-specific, guarded 60-block F
 - [USB4000 Operating Instructions](https://www.oceanoptics.com/wp-content/uploads/2024/12/USB4000-Operating-Instructions.pdf)
 - [Official USB4000 FX2 reference image](https://www.oceanoptics.com/wp-content/uploads/2025/08/usb4000v30200.iic)
 - [Official FPGA 3.0.45 image](https://www.oceanoptics.com/wp-content/uploads/2025/08/usb4kv3045.xsvf)
-- [Engineering blog](https://eladorbach.com/)
+- [Blog](https://eladorbach.com/)
